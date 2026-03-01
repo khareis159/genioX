@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏦 Lotofácil PRO — Sistema de Investimentos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f4fa 0%, #e6ecf5 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* HEADER PROFISSIONAL */
+        .header {
+            background: linear-gradient(135deg, #0b1f33, #183c5a, #0f2b44);
+            color: white;
+            padding: 30px 35px;
+            border-radius: 32px;
+            margin-bottom: 25px;
+            box-shadow: 0 20px 30px -10px rgba(0,30,60,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .header h1 {
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+
+        .header h1 span {
+            color: #fbbf24;
+            text-shadow: 0 2px 10px rgba(251,191,36,0.3);
+        }
+
+        .header-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px 40px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.15);
+            font-size: 1rem;
+            align-items: center;
+        }
+
+        .header-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-meta-item i {
+            font-size: 1.3rem;
+            opacity: 0.8;
+        }
+
+        .badge-author {
+            background: rgba(251,191,36,0.2);
+            border: 1px solid #fbbf24;
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #fbbf24;
+        }
+
+        /* BARRA DE FERRAMENTAS */
+        .toolbar {
+            background: white;
+            border-radius: 60px;
+            padding: 12px 25px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        }
+
+        .toolbar-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .btn:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: #1e3a6b;
+            color: white;
+            box-shadow: 0 4px 10px rgba(30,58,107,0.3);
+        }
+
+        .btn-primary:hover {
+            background: #0f2b4f;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #cbd5e1;
+        }
+
+        /* SISTEMA DE ABAS */
+        .tabs-modern {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(8px);
+            padding: 12px;
+            border-radius: 50px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .tab-modern {
+            padding: 12px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #334155;
+            background: transparent;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-modern:hover {
+            background: rgba(255,255,255,0.7);
+            color: #0f2b4f;
+        }
+
+        .tab-modern.active {
+            background: #1e3a6b;
+            color: white;
+            box-shadow: 0 4px 12px rgba(30,58,107,0.3);
+        }
+
+        /* CONTEÚDO DAS ABAS */
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0.3; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* CARDS MODERNOS */
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 28px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.03);
+            backdrop-filter: blur(2px);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0f2b4f;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 15px;
+        }
+
+        /* GRIDS */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* TABELAS */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 20px;
+            border: 1px solid #e9edf2;
+            background: white;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background: #f8fafd;
+            color: #0f2b4f;
+            font-weight: 700;
+            padding: 16px 14px;
+            text-align: left;
+            border-bottom: 2px solid #dde3ea;
+        }
+
+        td {
+            padding: 14px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: #fafcff;
+        }
+
+        /* BADGES E INDICADORES */
+        .badge {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-blue { background: #dbeafe; color: #1e40af; border: 1px solid #bfd9fe; }
+        .badge-green { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .badge-red { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .badge-yellow { background: #fef9c3; color: #854d0e; border: 1px solid #fde68a; }
+        .badge-purple { background: #f3e8ff; color: #6b21a8; border: 1px solid #e9d5ff; }
+        .badge-orange { background: #ffedd5; color: #9a3412; border: 1px solid #fed7aa; }
+
+        /* INPUTS */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #334155;
+            font-size: 0.9rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 18px;
+            border: 1px solid #d1d9e6;
+            border-radius: 18px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: #f9fcff;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #1e3a6b;
+            box-shadow: 0 0 0 3px rgba(30,58,107,0.1);
+        }
+
+        .input-blue {
+            background: #eef6ff;
+            border: 2px solid #1e3a6b;
+        }
+
+        /* ALERTAS */
+        .alert {
+            padding: 18px 22px;
+            border-radius: 18px;
+            margin: 20px 0;
+            border-left: 5px solid;
+        }
+
+        .alert-info { background: #e8f0fe; border-color: #1e3a6b; }
+        .alert-success { background: #d4edda; border-color: #28a745; }
+        .alert-warning { background: #fff3cd; border-color: #f5b342; }
+        .alert-danger { background: #f8d7da; border-color: #dc3545; }
+
+        /* LEGENDA DE CORES */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px 30px;
+            background: white;
+            padding: 18px 25px;
+            border-radius: 60px;
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .color-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 6px;
+        }
+
+        /* STATUS */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #0f2b4f;
+            color: white;
+            text-align: center;
+            padding: 40px 30px;
+            border-radius: 32px;
+            margin-top: 40px;
+        }
+
+        .footer a {
+            color: #fbbf24;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* MÓVEL */
+        @media (max-width: 600px) {
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .tabs-modern {
+                overflow-x: auto;
+                white-space: nowrap;
+                flex-wrap: nowrap;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- HEADER -->
+    <div class="header">
+        <h1>🏦 <span>Lotofácil PRO</span> · Sistema de Investimentos</h1>
+        <div style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 15px;">Autor: Carlos · Contato: (61) 99948-7649</div>
+        <div class="header-meta">
+            <div class="header-meta-item"><i>⚡</i> Versão 4.0 · Robusta</div>
+            <div class="header-meta-item"><i>💾</i> Storage + JSON</div>
+            <div class="header-meta-item"><i>🔄</i> Backup · Importar/Exportar</div>
+            <div class="badge-author">🧠 Estratégia Khareis 226</div>
+        </div>
+    </div>
+
+    <!-- BARRA DE FERRAMENTAS -->
+    <div class="toolbar">
+        <div class="toolbar-group">
+            <button class="btn btn-primary" onclick="exportBackup()"><i>⬇️</i> Exportar Backup</button>
+            <button class="btn btn-success" onclick="document.getElementById('importFile').click()"><i>⬆️</i> Importar Backup</button>
+            <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importBackup(event)">
+            <button class="btn btn-warning" onclick="resetDatabase()"><i>↺</i> Resetar Dados</button>
+        </div>
+        <div class="toolbar-group">
+            <button class="btn btn-outline" onclick="window.print()"><i>🖨️</i> Imprimir</button>
+        <!-- BOTÃO PARA VOLTAR AO GÊNIO X -->
+        <div class="toolbar-group">
+            <button class="btn btn-primary" onclick="window.location.href='./index.html'" style="background: #0f2b4f; border: 2px solid #fbbf24;">🎯 Voltar ao Gênio X</button>
+        </div>
+
+        </div>
+    </div>
+
+    <!-- LEGENDA DE CORES -->
+    <div class="legend">
+        <div class="legend-item"><span class="color-dot" style="background:#1e3a6b;"></span> 🔵 Input (editável)</div>
+        <div class="legend-item"><span class="color-dot" style="background:#28a745;"></span> 🟢 Lucro / Recuperação</div>
+        <div class="legend-item"><span class="color-dot" style="background:#dc3545;"></span> 🔴 Perda acumulada</div>
+        <div class="legend-item"><span class="color-dot" style="background:#ffc107;"></span> 🟡 Prêmio estimado</div>
+        <div class="legend-item"><span class="color-dot" style="background:#6f42c1;"></span> 🟣 Recuperação decisiva</div>
+        <div class="legend-item"><span class="color-dot" style="background:#fd7e14;"></span> 🟠 Alerta / custo alto</div>
+    </div>
+
+    <!-- ABAS -->
+    <div class="tabs-modern">
+        <button class="tab-modern active" onclick="openTab('dashboard')"><i>📊</i> Dashboard</button>
+        <button class="tab-modern" onclick="openTab('parametros')"><i>⚙️</i> Parâmetros</button>
+        <button class="tab-modern" onclick="openTab('recuperacao')"><i>📈</i> Recuperação</button>
+        <button class="tab-modern" onclick="openTab('calculadora')"><i>🎯</i> Calculadora</button>
+        <button class="tab-modern" onclick="openTab('probabilidades')"><i>📐</i> Probabilidades</button>
+        <button class="tab-modern" onclick="openTab('orcamento')"><i>💰</i> Orçamento</button>
+        <button class="tab-modern" onclick="openTab('historico')"><i>📚</i> Histórico</button>
+        <button class="tab-modern" onclick="openTab('estrategia')"><i>🧠</i> Estratégia</button>
+    </div>
+
+    <!-- CONTEÚDO DAS ABAS -->
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="tab-pane active">
+        <div class="card">
+            <div class="card-title"><i>📊</i> Painel de Controle</div>
+            <div class="grid-3">
+                <div class="alert alert-info" style="border-left: none; border-radius: 20px;">
+                    <strong>Saldo Atual:</strong><br>
+                    <span style="font-size: 2rem; font-weight: 700;" id="dashboardSaldo">R$ 0,00</span>
+                </div>
+                <div class="alert alert-warning" style="border-left: none; border-radius: 20px;">
+                    <strong>Total Investido:</strong><br>
+                    <span style="font-size: 2rem; font-weight: 700;" id="dashboardInvestido">R$ 0,00</span>
+                </div>
+                <div class="alert alert-success" style="border-left: none; border-radius: 20px;">
+                    <strong>Total Prêmios:</strong><br>
+                    <span style="font-size: 2rem; font-weight: 700;" id="dashboardPremios">R$ 0,00</span>
+                </div>
+            </div>
+            <div style="margin-top: 25px;">
+                <h3>📌 Resumo da Estratégia</h3>
+                <p>Você está usando o método de recuperação progressiva (não Fibonacci). Em caso de perda, aumente 50% das cartelas até no máximo 8. O objetivo é recuperar em até 5 concursos consecutivos.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PARÂMETROS -->
+    <div id="parametros" class="tab-pane">
+        <div class="card">
+            <div class="card-title"><i>⚙️</i> Parâmetros Globais</div>
+            <p class="alert alert-info">Edite os valores abaixo. Tudo é salvo automaticamente no seu navegador.</p>
+            <div class="grid-2">
+                <div>
+                    <div class="input-group">
+                        <label class="input-label">💰 Custo por cartela (R$)</label>
+                        <input type="number" id="paramCusto" class="input-field input-blue" step="0.01" value="3.50" onchange="saveParams()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">🎲 Cartelas base (início do ciclo)</label>
+                        <input type="number" id="paramBase" class="input-field input-blue" step="1" value="1" onchange="saveParams()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">🔝 Teto máximo de cartelas</label>
+                        <input type="number" id="paramTeto" class="input-field input-blue" step="1" value="8" onchange="saveParams()">
+                    </div>
+                </div>
+                <div>
+                    <div class="input-group">
+                        <label class="input-label">⏳ Máx. concursos c/ perda</label>
+                        <input type="number" id="paramMaxPerda" class="input-field input-blue" step="1" value="5" onchange="saveParams()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">📈 % aumento por derrota</label>
+                        <input type="number" id="paramAumento" class="input-field input-blue" step="1" value="50" onchange="saveParams()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">🔄 % do lucro reinvestido</label>
+                        <input type="number" id="paramReinvest" class="input-field input-blue" step="1" value="50" onchange="saveParams()">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">🎯 Meta de margem de lucro (%)</label>
+                        <input type="number" id="paramMargem" class="input-field input-blue" step="1" value="20" onchange="saveParams()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><i>🏆</i> Tabela de Prêmios Médios</div>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Acertos</th><th>Valor (R$)</th></tr></thead>
+                    <tbody>
+                        <tr><td>11</td><td><input type="number" id="premio11" class="input-field" value="6.00" step="0.01" onchange="savePremios()" style="width:120px;"></td></tr>
+                        <tr><td>12</td><td><input type="number" id="premio12" class="input-field" value="12.00" step="0.01" onchange="savePremios()" style="width:120px;"></td></tr>
+                        <tr><td>13</td><td><input type="number" id="premio13" class="input-field" value="35.00" step="0.01" onchange="savePremios()" style="width:120px;"></td></tr>
+                        <tr><td>14</td><td><input type="number" id="premio14" class="input-field" value="550.00" step="0.01" onchange="savePremios()" style="width:120px;"></td></tr>
+                        <tr><td>15</td><td><input type="number" id="premio15" class="input-field" value="650000.00" step="0.01" onchange="savePremios()" style="width:120px;"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- RECUPERAÇÃO -->
+    <div id="recuperacao" class="tab-pane">
+        <div class="card">
+            <div class="card-title"><i>📈</i> Tabela de Recuperação Inteligente</div>
+            <p>Registre seus resultados. Clique em "Adicionar Jogada" para inserir uma nova linha.</p>
+            <button class="btn btn-primary" onclick="addJogada()" style="margin-bottom: 20px;">➕ Adicionar Jogada</button>
+            <div class="table-wrapper" id="tabelaRecuperacaoContainer">
+                <table id="tabelaRecuperacao">
+                    <thead>
+                        <tr>
+                            <th>#</th><th>Cart.</th><th>Custo</th><th>Acumulado</th><th>Acertos</th><th>Prêmio</th><th>Lucro</th><th>Saldo</th><th>Status</th><th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recuperacaoBody">
+                        <!-- JS preenche -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- CALCULADORA -->
+    <div id="calculadora" class="tab-pane">
+        <div class="card">
+            <div class="card-title"><i>🎯</i> Calculadora da Próxima Rodada</div>
+            <div class="grid-2">
+                <div>
+                    <div class="input-group">
+                        <label class="input-label">🎲 Cartelas nesta rodada</label>
+                        <input type="number" id="calcCartelas" class="input-field input-blue" value="3">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">💰 Saldo acumulado ANTES</label>
+                        <input type="number" id="calcSaldoAntes" class="input-field input-blue" value="-15.00">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">🏆 Prêmio recebido (R$)</label>
+                        <input type="number" id="calcPremio" class="input-field input-blue" value="0">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">📊 Cartelas premiadas</label>
+                        <input type="number" id="calcCartelasPremiadas" class="input-field input-blue" value="0">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">💵 Prêmio médio por cartela</label>
+                        <input type="number" id="calcPremioMedio" class="input-field input-blue" value="6.00">
+                    </div>
+                </div>
+                <div>
+                    <div class="alert alert-info">
+                        <strong>📊 Resultados</strong><br>
+                        <p>Custo total: <span id="calcCustoTotal">R$ 10,50</span></p>
+                        <p>Prêmio bruto: <span id="calcPremioBruto">R$ 0,00</span></p>
+                        <p>Lucro/Prejuízo: <span id="calcLucro" class="badge-red">-R$ 10,50</span></p>
+                        <p>Saldo após rodada: <span id="calcSaldoApos">-R$ 25,50</span></p>
+                        <p><strong>Cartelas sugeridas p/ próximo: <span id="calcSugestao" class="badge-purple">4</span></strong></p>
+                    </div>
+                    <button class="btn btn-primary" onclick="calcularRodada()" style="margin-top: 15px;">🧮 Calcular</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROBABILIDADES -->
+    <div id="probabilidades" class="tab-pane">
+        <div class="card">
+            <div class="card-title"><i>📐</i> Probabilidades Reais da Lotofácil</div>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Acertos</th><th>Probabilidade</th><th>1 em X</th><th>Prêmio (R$)</th><th>ROI 1 cart.</th></tr></thead>
+                    <tbody id="tabelaProbabilidades">
+                        <!-- JS preenche -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="alert alert-danger" style="margin-top: 20px;">
+                <strong>⚠️ MATEMÁTICA HONESTA:</strong> A Caixa retém ~38-43% de todo valor apostado. Retorno esperado por R$1,00: R$0,57 a R$0,62.
+            </div>
+        </div>
+    </div>
+
+    <!-- ORÇAMENTO MENSAL -->
+    <div id="orcamento" class="tab-pane">
+        <div class="card">
+            <div class="card-title"><i>💰</i> Simulador de Orçamento Mensal</div>
+            <div class="grid-3">
+                <div class="alert alert-danger">
+                    <strong>😰 PESSIMISTA</strong><br>
+                    <span id="orcPessRetorno">R$ 216,00</span><br>
+                    Lucro: <span id="orcPessLucro">-R$ 234,00</span><br>
+                    ROI: <span id="orcPessROI">-52%</span>
+                </div>
+                <div class="alert alert-warning">
+                    <strong>😐 REALISTA</strong><br>
+                    <span id="orcRealRetorno">R$ 419,00</span><br>
+                    Lucro: <span id="orcRealLucro">-R$ 31,00</span><br>
+                    ROI: <span id="orcRealROI">-6,9%</span>
+                </div>
+                <div class="alert alert-success">
+                    <strong>🚀 OTIMISTA</strong><br>
+                    <span id="orcOtimRetorno">R$ 1.550,00</span><br>
+                    Lucro: <span id="orcOtimLucro">+R$ 1.100,00</span><br>
+                    ROI: <span id="orcOtimROI">+244%</span>
+                </div>
+            </div>
+            <div class="input-group" style="margin-top: 20px;">
+                <label class="input-label">📅 Concursos por mês (Lotofácil)</label>
+                <input type="number" id="orcConcursos" class="input-field" value="56" onchange="calcOrcamento()">
+            </div>
+        </div>
+    </div>
+
+    <!-- HISTÓRICO -->
+    <div id="historico" class="tab-pane">
+        <div class="card">
+            <div class="card-title"><i>📚</i> Histórico de Jogadas</div>
+            <div class="table-wrapper">
+                <table>
+                    <thead><tr><th>Data</th><th>Cartelas</th><th>Custo</th><th>Acertos</th><th>Prêmio</th><th>Saldo</th></tr></thead>
+                    <tbody id="historicoBody">
+                        <!-- JS preenche -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ESTRATÉGIA -->
+    <div id="estrategia" class="tab-pane">
+        <div class="card">
+            <div class="card-title"><i>🧠</i> Guia Estratégico</div>
+            <div class="grid-2">
+                <div>
+                    <h3>📌 Ciclo Básico</h3>
+                    <p>Comece com <strong>1 cartela</strong>. Se perder, aumente <strong>50%</strong> (1 → 2 → 3 → 5 → 8). Nunca ultrapasse o teto. Ao zerar o prejuízo + margem, volte ao início.</p>
+                </div>
+                <div>
+                    <h3>⚠️ Regras de Ouro</h3>
+                    <ul style="padding-left: 20px;">
+                        <li>✅ Edite apenas campos azuis</li>
+                        <li>✅ Não aposte mais que 5% da banca</li>
+                        <li>✅ Se perder 5x seguidas, pare</li>
+                        <li>✅ Use a calculadora antes de cada rodada</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="alert alert-warning" style="margin-top: 20px;">
+                <strong>📞 Contato do Autor:</strong> Carlos · (61) 99948-7649 · Suporte via WhatsApp
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <h3>🏦 Lotofácil PRO · Sistema de Investimentos</h3>
+        <p>Autor: Carlos · (61) 99948-7649 · Estratégia Khareis 226</p>
+        <p style="margin-top: 15px; opacity: 0.8;">Use com responsabilidade. Loterias são jogos de azar. Esta ferramenta é para estudo e planejamento.</p>
+    </div>
+</div>
+
+<script>
+    // ==================== SISTEMA DE ARMAZENAMENTO ====================
+    let db = {
+        parametros: {
+            custo: 3.50,
+            base: 1,
+            teto: 8,
+            maxPerda: 5,
+            aumento: 50,
+            reinvest: 50,
+            margem: 20
+        },
+        premios: {
+            p11: 6.00,
+            p12: 12.00,
+            p13: 35.00,
+            p14: 550.00,
+            p15: 650000.00
+        },
+        jogadas: [],
+        historico: []
+    };
+
+    // Carregar do localStorage
+    function loadDB() {
+        const saved = localStorage.getItem('lotofacilPro');
+        if (saved) {
+            try {
+                db = JSON.parse(saved);
+            } catch (e) {
+                console.error('Erro ao carregar DB');
+            }
+        }
+        atualizarInputs();
+        renderTabelaRecuperacao();
+        renderHistorico();
+        renderProbabilidades();
+        calcOrcamento();
+        updateDashboard();
+    }
+
+    // Salvar no localStorage
+    function saveDB() {
+        localStorage.setItem('lotofacilPro', JSON.stringify(db));
+        atualizarInputs();
+        renderTabelaRecuperacao();
+        renderHistorico();
+        updateDashboard();
+    }
+
+    // Atualizar inputs com valores do db
+    function atualizarInputs() {
+        document.getElementById('paramCusto').value = db.parametros.custo;
+        document.getElementById('paramBase').value = db.parametros.base;
+        document.getElementById('paramTeto').value = db.parametros.teto;
+        document.getElementById('paramMaxPerda').value = db.parametros.maxPerda;
+        document.getElementById('paramAumento').value = db.parametros.aumento;
+        document.getElementById('paramReinvest').value = db.parametros.reinvest;
+        document.getElementById('paramMargem').value = db.parametros.margem;
+        document.getElementById('premio11').value = db.premios.p11;
+        document.getElementById('premio12').value = db.premios.p12;
+        document.getElementById('premio13').value = db.premios.p13;
+        document.getElementById('premio14').value = db.premios.p14;
+        document.getElementById('premio15').value = db.premios.p15;
+    }
+
+    // Salvar parâmetros
+    function saveParams() {
+        db.parametros.custo = parseFloat(document.getElementById('paramCusto').value);
+        db.parametros.base = parseInt(document.getElementById('paramBase').value);
+        db.parametros.teto = parseInt(document.getElementById('paramTeto').value);
+        db.parametros.maxPerda = parseInt(document.getElementById('paramMaxPerda').value);
+        db.parametros.aumento = parseInt(document.getElementById('paramAumento').value);
+        db.parametros.reinvest = parseInt(document.getElementById('paramReinvest').value);
+        db.parametros.margem = parseInt(document.getElementById('paramMargem').value);
+        saveDB();
+    }
+
+    function savePremios() {
+        db.premios.p11 = parseFloat(document.getElementById('premio11').value);
+        db.premios.p12 = parseFloat(document.getElementById('premio12').value);
+        db.premios.p13 = parseFloat(document.getElementById('premio13').value);
+        db.premios.p14 = parseFloat(document.getElementById('premio14').value);
+        db.premios.p15 = parseFloat(document.getElementById('premio15').value);
+        saveDB();
+    }
+
+    // Renderizar tabela de recuperação
+    function renderTabelaRecuperacao() {
+        let body = document.getElementById('recuperacaoBody');
+        if (!body) return;
+        let html = '';
+        let saldo = 0;
+        let acumulado = 0;
+        let jogadas = db.jogadas.length ? db.jogadas : [
+            { cartelas: 1, acertos: null, premio: 0, status: 'PERDA' },
+            { cartelas: 2, acertos: null, premio: 0, status: 'PERDA' },
+            { cartelas: 3, acertos: null, premio: 0, status: 'PERDA' },
+            { cartelas: 4, acertos: 11, premio: 24, status: 'RECUPEROU' }
+        ];
+
+        for (let i = 0; i < jogadas.length; i++) {
+            let j = jogadas[i];
+            let custo = j.cartelas * db.parametros.custo;
+            acumulado += custo;
+            let lucro = j.premio - custo;
+            saldo += lucro;
+
+            let statusClass = 'badge-red';
+            if (j.status === 'RECUPEROU') statusClass = 'badge-purple';
+            else if (j.status === 'LUCRO+') statusClass = 'badge-green';
+            else if (j.status === 'PRÊMIO 14') statusClass = 'badge-orange';
+            else if (j.status === 'JACKPOT!') statusClass = 'badge-yellow';
+
+            html += `<tr>
+                <td>${i+1}</td>
+                <td>${j.cartelas}</td>
+                <td>R$ ${custo.toFixed(2)}</td>
+                <td>R$ ${acumulado.toFixed(2)}</td>
+                <td><input type="number" class="input-field" style="width:70px;" value="${j.acertos || ''}" onchange="updateAcertos(${i}, this.value)"></td>
+                <td>R$ ${j.premio.toFixed(2)}</td>
+                <td class="${lucro >= 0 ? 'badge-green' : 'badge-red'}">R$ ${lucro.toFixed(2)}</td>
+                <td>R$ ${saldo.toFixed(2)}</td>
+                <td><span class="badge ${statusClass}">${j.status}</span></td>
+                <td><button class="btn btn-danger btn-small" onclick="removerJogada(${i})">🗑️</button></td>
+            </tr>`;
+        }
+        body.innerHTML = html;
+        db.jogadas = jogadas;
+        saveDB();
+    }
+
+    function updateAcertos(index, valor) {
+        let acertos = parseInt(valor);
+        if (isNaN(acertos)) acertos = null;
+        db.jogadas[index].acertos = acertos;
+        let premio = 0;
+        if (acertos === 11) premio = db.premios.p11 * db.jogadas[index].cartelas;
+        else if (acertos === 12) premio = db.premios.p12 * db.jogadas[index].cartelas;
+        else if (acertos === 13) premio = db.premios.p13 * db.jogadas[index].cartelas;
+        else if (acertos === 14) premio = db.premios.p14 * db.jogadas[index].cartelas;
+        else if (acertos === 15) premio = db.premios.p15 * db.jogadas[index].cartelas;
+        db.jogadas[index].premio = premio;
+
+        if (acertos === 14) db.jogadas[index].status = 'PRÊMIO 14';
+        else if (acertos === 15) db.jogadas[index].status = 'JACKPOT!';
+        else if (premio > db.jogadas[index].cartelas * db.parametros.custo * 2) db.jogadas[index].status = 'LUCRO+';
+        else if (premio > 0) db.jogadas[index].status = 'RECUPEROU';
+        else db.jogadas[index].status = 'PERDA';
+
+        renderTabelaRecuperacao();
+    }
+
+    function addJogada() {
+        let ultima = db.jogadas[db.jogadas.length - 1] || { cartelas: 1 };
+        let novasCartelas = Math.min(ultima.cartelas * 1.5, db.parametros.teto);
+        db.jogadas.push({ cartelas: Math.ceil(novasCartelas), acertos: null, premio: 0, status: 'PERDA' });
+        renderTabelaRecuperacao();
+    }
+
+    function removerJogada(index) {
+        db.jogadas.splice(index, 1);
+        renderTabelaRecuperacao();
+    }
+
+    // Renderizar histórico
+    function renderHistorico() {
+        // Simples por enquanto
+    }
+
+    // Probabilidades
+    function renderProbabilidades() {
+        let body = document.getElementById('tabelaProbabilidades');
+        if (!body) return;
+        let html = '';
+        let dados = [
+            { acertos: 15, prob: 1/3268760, premio: db.premios.p15 },
+            { acertos: 14, prob: 1/21792, premio: db.premios.p14 },
+            { acertos: 13, prob: 1/692, premio: db.premios.p13 },
+            { acertos: 12, prob: 1/50, premio: db.premios.p12 },
+            { acertos: 11, prob: 1/9.5, premio: db.premios.p11 }
+        ];
+        for (let d of dados) {
+            let roi = ((d.premio - db.parametros.custo) / db.parametros.custo * 100).toFixed(0);
+            html += `<tr>
+                <td>${d.acertos}</td>
+                <td>${d.prob.toExponential(2)}</td>
+                <td>${Math.round(1/d.prob)}</td>
+                <td>R$ ${d.premio.toFixed(2)}</td>
+                <td class="${roi > 0 ? 'badge-green' : 'badge-red'}">${roi}%</td>
+            </tr>`;
+        }
+        body.innerHTML = html;
+    }
+
+    // Calculadora
+    function calcularRodada() {
+        let cartelas = parseFloat(document.getElementById('calcCartelas').value);
+        let saldoAntes = parseFloat(document.getElementById('calcSaldoAntes').value);
+        let premioRecebido = parseFloat(document.getElementById('calcPremio').value);
+        let cartPrem = parseFloat(document.getElementById('calcCartelasPremiadas').value);
+        let premioMedio = parseFloat(document.getElementById('calcPremioMedio').value);
+
+        let custoTotal = cartelas * db.parametros.custo;
+        let premioBruto = premioRecebido > 0 ? premioRecebido : cartPrem * premioMedio;
+        let lucro = premioBruto - custoTotal;
+        let saldoApos = saldoAntes + lucro;
+
+        document.getElementById('calcCustoTotal').innerText = `R$ ${custoTotal.toFixed(2)}`;
+        document.getElementById('calcPremioBruto').innerText = `R$ ${premioBruto.toFixed(2)}`;
+        document.getElementById('calcLucro').innerHTML = `<span class="${lucro >= 0 ? 'badge-green' : 'badge-red'}">R$ ${lucro.toFixed(2)}</span>`;
+        document.getElementById('calcSaldoApos').innerText = `R$ ${saldoApos.toFixed(2)}`;
+
+        // Sugestão próxima rodada
+        if (saldoApos >= 0) {
+            document.getElementById('calcSugestao').innerHTML = '<span class="badge-purple">1 (zerou)</span>';
+        } else {
+            let precisa = Math.abs(saldoApos) * (1 + db.parametros.margem/100);
+            let sugestao = Math.ceil(precisa / premioMedio);
+            sugestao = Math.min(sugestao, db.parametros.teto);
+            document.getElementById('calcSugestao').innerHTML = `<span class="badge-purple">${sugestao}</span>`;
+        }
+    }
+
+    // Orçamento mensal
+    function calcOrcamento() {
+        let concursos = parseInt(document.getElementById('orcConcursos').value) || 56;
+        let custoMensal = db.parametros.base * concursos * db.parametros.custo;
+
+        // Pessimista
+        let p11 = Math.round(concursos * 0.65);
+        let retPess = p11 * db.parametros.base * db.premios.p11;
+        document.getElementById('orcPessRetorno').innerText = `R$ ${retPess.toFixed(2)}`;
+        document.getElementById('orcPessLucro').innerText = `R$ ${(retPess - custoMensal).toFixed(2)}`;
+        document.getElementById('orcPessROI').innerText = `${((retPess - custoMensal)/custoMensal*100).toFixed(1)}%`;
+
+        // Realista
+        let r11 = Math.round(concursos * 0.6);
+        let r12 = Math.round(concursos * 0.1);
+        let r13 = Math.round(concursos * 0.02);
+        let r14 = Math.round(concursos / 21792);
+        let retReal = r11 * db.parametros.base * db.premios.p11 + r12 * db.parametros.base * db.premios.p12 + r13 * db.parametros.base * db.premios.p13 + r14 * db.parametros.base * db.premios.p14;
+        document.getElementById('orcRealRetorno').innerText = `R$ ${retReal.toFixed(2)}`;
+        document.getElementById('orcRealLucro').innerText = `R$ ${(retReal - custoMensal).toFixed(2)}`;
+        document.getElementById('orcRealROI').innerText = `${((retReal - custoMensal)/custoMensal*100).toFixed(1)}%`;
+
+        // Otimista
+        let o13 = Math.round(concursos * 0.04);
+        let o14 = Math.round(concursos * 2 / 21792);
+        let retOtim = r11 * db.parametros.base * db.premios.p11 + o13 * db.parametros.base * db.premios.p13 + o14 * db.parametros.base * db.premios.p14;
+        document.getElementById('orcOtimRetorno').innerText = `R$ ${retOtim.toFixed(2)}`;
+        document.getElementById('orcOtimLucro').innerText = `R$ ${(retOtim - custoMensal).toFixed(2)}`;
+        document.getElementById('orcOtimROI').innerText = `${((retOtim - custoMensal)/custoMensal*100).toFixed(1)}%`;
+    }
+
+    // Dashboard
+    function updateDashboard() {
+        let totalInvestido = 0;
+        let totalPremios = 0;
+        for (let j of db.jogadas) {
+            totalInvestido += j.cartelas * db.parametros.custo;
+            totalPremios += j.premio;
+        }
+        let saldo = totalPremios - totalInvestido;
+        document.getElementById('dashboardSaldo').innerText = `R$ ${saldo.toFixed(2)}`;
+        document.getElementById('dashboardInvestido').innerText = `R$ ${totalInvestido.toFixed(2)}`;
+        document.getElementById('dashboardPremios').innerText = `R$ ${totalPremios.toFixed(2)}`;
+    }
+
+    // Backup
+    function exportBackup() {
+        let dataStr = JSON.stringify(db, null, 2);
+        let blob = new Blob([dataStr], {type: 'application/json'});
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = `lotofacil_backup_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+    }
+
+    function importBackup(event) {
+        let file = event.target.files[0];
+        if (!file) return;
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                db = JSON.parse(e.target.result);
+                saveDB();
+                alert('Backup importado com sucesso!');
+            } catch (err) {
+                alert('Erro ao importar arquivo.');
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function resetDatabase() {
+        if (confirm('Tem certeza? Todos os dados serão perdidos.')) {
+            localStorage.removeItem('lotofacilPro');
+            db = {
+                parametros: { custo: 3.50, base: 1, teto: 8, maxPerda: 5, aumento: 50, reinvest: 50, margem: 20 },
+                premios: { p11: 6.00, p12: 12.00, p13: 35.00, p14: 550.00, p15: 650000.00 },
+                jogadas: [],
+                historico: []
+            };
+            saveDB();
+        }
+    }
+
+    // Abas
+    function openTab(tabName) {
+        let tabs = document.querySelectorAll('.tab-pane');
+        let btns = document.querySelectorAll('.tab-modern');
+        for (let t of tabs) t.classList.remove('active');
+        for (let b of btns) b.classList.remove('active');
+        document.getElementById(tabName).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+
+    // Inicialização
+    window.onload = function() {
+        loadDB();
+        renderProbabilidades();
+        calcOrcamento();
+        calcularRodada();
+    };
+</script>
+</body>
+</html>
