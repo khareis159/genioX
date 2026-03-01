@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Gênio X v4 — Sistema de Apoio à Aposta</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #0e1b2c 0%, #1a2d42 100%);
+      color: #eaeaea;
+      overflow-x: hidden;
+    }
+
+    body {
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .container {
+      flex: 1;
+      width: 100%;
+      max-width: 100%;
+      padding: 12px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+    }
+
+    .header {
+      background: rgba(20, 37, 61, 0.95);
+      padding: 16px 12px;
+      border-bottom: 2px solid #7ec8ff;
+      margin-bottom: 16px;
+      border-radius: 0 0 8px 8px;
+      backdrop-filter: blur(10px);
+    }
+
+    .header h1 {
+      color: #7ec8ff;
+      font-size: 24px;
+      margin: 0 0 4px 0;
+      font-weight: 700;
+    }
+
+    .header p {
+      font-size: 12px;
+      color: #b0c4de;
+      margin: 0;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #2a4158;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 0;
+    }
+
+    .tab-btn {
+      padding: 10px 14px;
+      border: none;
+      background: transparent;
+      color: #b0c4de;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    .tab-btn:hover {
+      color: #7ec8ff;
+    }
+
+    .tab-btn.active {
+      color: #7ec8ff;
+      border-bottom-color: #7ec8ff;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.2s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .panel {
+      background: rgba(20, 37, 61, 0.8);
+      padding: 16px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(126, 200, 255, 0.1);
+      backdrop-filter: blur(5px);
+    }
+
+    .panel h3 {
+      color: #7ec8ff;
+      font-size: 16px;
+      margin: 0 0 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .panel-row {
+        flex-direction: row;
+        gap: 12px;
+      }
+
+      .panel-row > * {
+        flex: 1;
+      }
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: #b0c4de;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(126, 200, 255, 0.2);
+      border-radius: 6px;
+      background: rgba(30, 50, 80, 0.6);
+      color: #eaeaea;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    input[type="number"]:focus,
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #7ec8ff;
+      background: rgba(30, 50, 80, 0.9);
+      box-shadow: 0 0 8px rgba(126, 200, 255, 0.2);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+      font-family: 'Courier New', monospace;
+    }
+
+    button {
+      padding: 11px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      background: #1f6feb;
+      color: #fff;
+      width: 100%;
+    }
+
+    button:hover {
+      background: #388bfd;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(56, 139, 253, 0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      background: #4a5f7f;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    @media (min-width: 768px) {
+      button {
+        width: auto;
+      }
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: #2ea043;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .cartelas-container {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .cartelas-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .cartelas-container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .cartela {
+      font-family: 'Courier New', monospace;
+      padding: 12px;
+      background: rgba(30, 50, 80, 0.5);
+      border: 1px solid rgba(126, 200, 255, 0.15);
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: 1.6;
+      word-break: break-all;
+      transition: all 0.2s ease;
+    }
+
+    .cartela:hover {
+      background: rgba(30, 50, 80, 0.8);
+      border-color: rgba(126, 200, 255, 0.3);
+    }
+
+    .cartela.hit11 { color: #facc15; border-left: 3px solid #facc15; }
+    .cartela.hit12 { color: #22d3ee; border-left: 3px solid #22d3ee; }
+    .cartela.hit13 { color: #38bdf8; border-left: 3px solid #38bdf8; font-weight: bold; }
+    .cartela.hit14 { color: #fb923c; border-left: 3px solid #fb923c; font-weight: bold; }
+    .cartela.hit15 { color: #22c55e; border-left: 3px solid #22c55e; font-weight: bold; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .stat-card {
+      background: rgba(30, 50, 80, 0.6);
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(126, 200, 255, 0.15);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #7ec8ff;
+      margin: 4px 0;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #b0c4de;
+      margin: 0;
+    }
+
+    .diagnostico {
+      background: rgba(30, 50, 80, 0.6);
+      padding: 12px;
+      border-radius: 6px;
+      border-left: 4px solid #7ec8ff;
+      margin-top: 12px;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .diagnostico b {
+      color: #7ec8ff;
+    }
+
+    .ok { color: #22c55e; font-weight: 600; }
+    .warn { color: #facc15; font-weight: 600; }
+    .danger { color: #ef4444; font-weight: 600; }
+
+    .footer {
+      margin-top: 24px;
+      padding: 16px 12px;
+      font-size: 11px;
+      color: #7a8fa0;
+      text-align: center;
+      border-top: 1px solid rgba(126, 200, 255, 0.1);
+    }
+
+    .alert {
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      display: none;
+    }
+
+    .alert.show {
+      display: block;
+    }
+
+    .alert-info {
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #38bdf8;
+    }
+
+    .alert-warning {
+      background: rgba(250, 204, 21, 0.1);
+      border: 1px solid rgba(250, 204, 21, 0.3);
+      color: #facc15;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #ef4444;
+    }
+
+    .alert-success {
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      color: #22c55e;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .btn-group button {
+      flex: 1;
+    }
+
+    .btn-help {
+      background: rgba(126, 200, 255, 0.1);
+      border: 1px solid rgba(126, 200, 255, 0.3);
+      color: #7ec8ff;
+      padding: 11px 16px;
+      width: auto;
+    }
+
+    .btn-help:hover {
+      background: rgba(126, 200, 255, 0.2);
+      border-color: rgba(126, 200, 255, 0.5);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(20, 37, 61, 0.3);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(126, 200, 255, 0.3);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(126, 200, 255, 0.5);
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      animation: fadeIn 0.2s ease-in;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal {
+      background: linear-gradient(135deg, #14253d 0%, #1a2d42 100%);
+      border: 1px solid rgba(126, 200, 255, 0.2);
+      border-radius: 12px;
+      max-width: 90vw;
+      max-height: 90vh;
+      width: 100%;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-header {
+      padding: 20px;
+      border-bottom: 1px solid rgba(126, 200, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(20, 37, 61, 0.95);
+      border-radius: 12px 12px 0 0;
+    }
+
+    .modal-header h2 {
+      color: #7ec8ff;
+      font-size: 20px;
+      margin: 0;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: #7ec8ff;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+      color: #fff;
+      transform: rotate(90deg);
+    }
+
+    .modal-content {
+      padding: 20px;
+      font-size: 14px;
+      line-height: 1.8;
+      color: #eaeaea;
+    }
+
+    .modal-content h3 {
+      color: #7ec8ff;
+      font-size: 16px;
+      margin: 16px 0 8px 0;
+      margin-top: 20px;
+    }
+
+    .modal-content h3:first-child {
+      margin-top: 0;
+    }
+
+    .modal-content p {
+      margin: 0 0 12px 0;
+    }
+
+    .modal-content strong {
+      color: #38bdf8;
+    }
+
+    .help-box {
+      background: rgba(56, 189, 248, 0.1);
+      border-left: 3px solid #38bdf8;
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .help-example {
+      background: rgba(30, 50, 80, 0.6);
+      padding: 12px;
+      margin: 12px 0;
+      border-radius: 4px;
+      border: 1px solid rgba(126, 200, 255, 0.15);
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .modal {
+        max-width: 95vw;
+        max-height: 95vh;
+        border-radius: 8px;
+      }
+
+      .modal-header {
+        padding: 16px;
+      }
+
+      .modal-content {
+        padding: 16px;
+      }
+
+      .modal-header h2 {
+        font-size: 18px;
+      }
+    }
+    /* Estilo adicional para o botão de reset */
+    button[onclick="resetSistema()"]:hover {
+      background: #627a9d !important;
+      box-shadow: 0 4px 12px rgba(74, 95, 127, 0.3);
+    }
+  </style>
+</head>
+<body>
+<div class="header">
+  <h1>🎯 Gênio X v4</h1>
+  <p>Sistema determinístico de apoio à aposta consciente • Estrutura • Leitura • Controle</p>
+</div>
+
+<div class="container">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('capital')">💰 Capital</button>
+    <button class="tab-btn" onclick="switchTab('cartelas')">🎰 Cartelas</button>
+    <button class="tab-btn" onclick="switchTab('conferencia')">🔎 Conferência</button>
+    <!-- BOTÃO PARA ABRIR O SISTEMA DE INVESTIMENTOS -->
+    <button class="tab-btn" onclick="window.location.href='./investimentos.html'" style="background: rgba(126, 200, 255, 0.1); border: 1px solid #7ec8ff; margin-left: 10px; color: #7ec8ff;">🏦 Ir para Investimentos ➜</button>
+  </div>
+  <div id="capital" class="tab-content active">
+    <div class="panel">
+      <h3>Gestão de Capital (Simulação)</h3>
+      <div class="panel-row">
+        <div>
+          <label for="banca">Banca inicial (R$)</label>
+          <input id="banca" type="number" value="500" min="10" step="10" />
+        </div>
+        <div>
+          <label for="cartelasPorConcurso">Cartelas por concurso</label>
+          <input id="cartelasPorConcurso" type="number" value="30" min="1" max="100" />
+        </div>
+      </div>
+      <div class="panel-row">
+        <div>
+          <label for="custo">Custo por cartela (R$)</label>
+          <input id="custo" type="number" value="3.5" min="0.1" step="0.1" />
+        </div>
+        <div>
+          <label for="ciclos">Nº de concursos simulados</label>
+          <input id="ciclos" type="number" value="10" min="1" max="100" />
+        </div>
+      </div>
+      <div class="btn-group">
+        <button onclick="simular()" style="flex: 1;">Simular cenário</button>
+        <button class="btn-help" onclick="openHelp()">? Ajuda</button>
+<button onclick="resetSistema()" style="background: #4a5f7f; margin-left: 8px;">🔄 Reset</button>
+      </div>
+      <div id="diagnostico"></div>
+    </div>
+  </div>
+
+  <div id="cartelas" class="tab-content">
+    <div class="panel">
+      <h3>Geração de Cartelas</h3>
+      <p style="font-size: 12px; color: #b0c4de; margin: 0 0 12px 0;">
+        Baseado em 3 modelos determinísticos com filtro de sequências.
+      </p>
+      <button onclick="gerar()">Gerar cartelas</button>
+      <div id="saida"></div>
+    </div>
+  </div>
+
+  <div id="conferencia" class="tab-content">
+    <div class="panel">
+      <h3>Conferência de Resultado</h3>
+      <label for="resultado">Informe as 15 dezenas sorteadas (separadas por vírgula)</label>
+      <textarea id="resultado" placeholder="Ex: 1, 5, 8, 12, 15, 18, 20, 22, 24, 25, 3, 7, 11, 14, 19"></textarea>
+      <button onclick="conferir()">Conferir cartelas</button>
+      <div id="estatisticas"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    © Gênio X v4 — Copiryth - Carlos Alberto Reis © 2026<br>
+    Uso restrito • Apoio ao Sistema: Pix para 61999487649 • Tudo determinístico
+  </div>
+</div>
+
+<!-- MODAL DE AJUDA -->
+<div id="helpModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>📚 Guia de Simulação</h2>
+      <button class="modal-close" onclick="closeHelp()">✕</button>
+    </div>
+    <div class="modal-content">
+      <h3>O que é a Simulação?</h3>
+      <p>A simulação calcula como seu dinheiro se comporta ao longo de vários concursos. Ela ajuda você a entender se está apostando de forma sustentável ou se está correndo risco demais.</p>
+
+      <h3>Os Valores Explicados</h3>
+
+      <p><strong>Banca Inicial</strong></p>
+      <p>É todo o dinheiro que você tem disponível para apostar. Exemplo: R$ 500.</p>
+
+      <p><strong>Cartelas por Concurso</strong></p>
+      <p>Quantas cartelas você vai jogar em cada sorteio. Exemplo: 30 cartelas.</p>
+
+      <p><strong>Custo por Cartela</strong></p>
+      <p>Quanto custa cada cartela. Exemplo: R$ 3,50.</p>
+
+      <p><strong>Número de Concursos Simulados</strong></p>
+      <p>Quantos sorteios você quer simular para ver como fica sua situação. Exemplo: 10 concursos.</p>
+
+      <h3>Entendendo o Resultado</h3>
+
+      <p><strong>Exposição Total</strong></p>
+      <div class="help-box">
+        É quanto você vai gastar no total.<br>
+        <strong>Fórmula:</strong> Cartelas × Custo × Concursos<br>
+        <strong>Exemplo:</strong> 30 × R$ 3,50 × 10 = R$ 1.050
+      </div>
+
+      <p><strong>Retorno Estrutural Estimado</strong></p>
+      <div class="help-box">
+        É quanto você pode ganhar em média com os prêmios de 11 e 12 pontos.<br>
+        Isso é uma estimativa baseada em probabilidades históricas.<br>
+        <strong>Não é garantido!</strong> É só uma previsão.
+      </div>
+
+      <p><strong>ISA (Índice de Stress de Aposta)</strong></p>
+      <div class="help-box">
+        Compara quanto você vai gastar com quanto pode ganhar.<br>
+        <strong>Fórmula:</strong> Exposição Total ÷ Retorno Estimado<br>
+        Quanto <strong>menor</strong> o ISA, melhor para você.
+      </div>
+
+      <h3>Interpretando as Zonas</h3>
+
+      <p><strong style="color: #22c55e;">✓ ZONA ESTÁVEL (ISA até 1.2)</strong></p>
+      <div class="help-box">
+        <strong>Significado:</strong> Você está em equilíbrio. O que gasta é próximo ao que pode ganhar.<br>
+        <strong>Recomendação:</strong> Você pode continuar apostando assim sem grande risco.
+      </div>
+
+      <p><strong style="color: #facc15;">⚠ ZONA DE ATENÇÃO (ISA entre 1.2 e 1.8)</strong></p>
+      <div class="help-box">
+        <strong>Significado:</strong> Você está gastando mais do que pode ganhar em média.<br>
+        <strong>Recomendação:</strong> Fique atento. Considere reduzir cartelas ou custo. Não é crítico, mas observe.
+      </div>
+
+      <p><strong style="color: #ef4444;">🔴 STRESS ALTO (ISA acima de 1.8)</strong></p>
+      <div class="help-box">
+        <strong>Significado:</strong> Você está gastando muito mais do que pode ganhar. Alto risco de prejuízo.<br>
+        <strong>Recomendação:</strong> <strong>Reduza!</strong> Diminua o número de cartelas, o custo, ou ambos.
+      </div>
+
+      <h3>Exemplo Prático</h3>
+
+      <p><strong>Cenário:</strong> Você tem R$ 500, quer jogar 30 cartelas a R$ 3,50 cada, por 10 concursos.</p>
+
+      <div class="help-example">
+        Exposição Total: R$ 1.050<br>
+        Retorno Estimado: R$ 650<br>
+        ISA: 1.62<br>
+        Status: ⚠ ZONA DE ATENÇÃO
+      </div>
+
+      <p><strong>O que isso significa?</strong></p>
+      <p>Você vai gastar R$ 1.050, mas pode ganhar apenas R$ 650 em média. Isso deixa você com prejuízo de R$ 400 esperado. Sua banca de R$ 500 não é suficiente para esse padrão de aposta.</p>
+
+      <p><strong>O que fazer?</strong></p>
+      <p>Você poderia:</p>
+      <ul style="margin-left: 16px; margin-top: 8px;">
+        <li>Reduzir para 20 cartelas por concurso</li>
+        <li>Reduzir para R$ 2,50 por cartela</li>
+        <li>Jogar apenas 5 concursos em vez de 10</li>
+        <li>Aumentar sua banca para R$ 1.000</li>
+      </ul>
+
+      <h3>Dicas Importantes</h3>
+
+      <div class="help-box">
+        <strong>1. Isso é uma previsão, não certeza</strong><br>
+        O retorno estimado é baseado em probabilidades. Você pode ganhar mais ou menos.
+      </div>
+
+      <div class="help-box">
+        <strong>2. Use a simulação para planejar</strong><br>
+        Teste diferentes cenários antes de apostar de verdade.
+      </div>
+
+      <div class="help-box">
+        <strong>3. Nunca aposte mais do que pode perder</strong><br>
+        Sua banca deve ser dinheiro que você pode perder sem afetar sua vida.
+      </div>
+
+      <div class="help-box">
+        <strong>4. Mantenha a disciplina</strong><br>
+        Não mude seu padrão de aposta no meio do caminho por emoção.
+      </div>
+
+      <h3>Dúvidas Comuns</h3>
+
+      <p><strong>P: Se o ISA é 1.5, vou perder dinheiro?</strong><br>
+      R: Provavelmente sim, em média. Mas há chance de ganhar. Depende da sorte.</p>
+
+      <p><strong>P: Posso confiar 100% nessa simulação?</strong><br>
+      R: Não. É uma estimativa. A realidade pode ser diferente. Use como guia, não como garantia.</p>
+
+      <p><strong>P: Qual é o melhor ISA?</strong><br>
+      R: Quanto mais próximo de 1.0, melhor. Abaixo de 1.2 é seguro.</p>
+
+      <p><strong>P: E se eu ganhar na primeira?</strong><br>
+      R: Ótimo! Mas a simulação calcula a média de vários concursos, não apenas um.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const MODELOS = {
+  A: [1, 3, 5, 7, 9, 11, 13, 15, 19, 21],
+  B: [1, 3, 5, 11, 13, 15, 17, 19, 21, 23, 25],
+  C: [3, 7, 9, 11, 13, 15, 17, 21, 23, 25]
+};
+
+const UNIVERSO = Array.from({ length: 25 }, (_, i) => i + 1);
+const PREMIOS = { 11: 6, 12: 12, 13: 30, 14: 1500, 15: 1500000 };
+
+let TODAS = {};
+
+const pares = (a) => a.filter(n => n % 2 === 0);
+
+function seq4(a) {
+  for (let i = 0; i < a.length - 3; i++) {
+    if (a[i + 3] === a[i] + 3 && a[i + 1] === a[i] + 1 && a[i + 2] === a[i] + 2) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function linhas(a) {
+  const l = [0, 0, 0, 0, 0];
+  a.forEach(n => l[Math.floor((n - 1) / 5)]++);
+  return l.filter(x => x >= 4).length;
+}
+
+function score(c) {
+  let s = 0;
+  if (seq4(c)) s += 5;
+  if (linhas(c) >= 2) s += 3;
+  if (pares(c).length === 6) s += 2;
+  return s;
+}
+
+function gerarModelo(m) {
+  const base = MODELOS[m];
+  const resto = UNIVERSO.filter(n => !base.includes(n));
+  const out = [];
+
+  for (let i = 0; i < resto.length; i++) {
+    for (let j = i + 1; j < resto.length; j++) {
+      for (let k = j + 1; k < resto.length; k++) {
+        for (let l = k + 1; l < resto.length; l++) {
+          for (let x = l + 1; x < resto.length; x++) {
+            const c = [...base, resto[i], resto[j], resto[k], resto[l], resto[x]].sort((a, b) => a - b);
+            if (seq4(c)) {
+              out.push(c);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  out.sort((a, b) => score(b) - score(a));
+  return out.slice(0, 30);
+}
+
+function gerar() {
+  TODAS = {};
+  const s = document.getElementById('saida');
+  s.innerHTML = '';
+
+  Object.keys(MODELOS).forEach(m => {
+    const cs = gerarModelo(m);
+    TODAS[m] = cs;
+
+    const modelDiv = document.createElement('div');
+    modelDiv.className = 'panel';
+    modelDiv.innerHTML = `<h3>Modelo ${m} <span class='badge'>${cs.length} cartelas</span></h3>`;
+
+    const container = document.createElement('div');
+    container.className = 'cartelas-container';
+
+    cs.forEach(c => {
+      const p = document.createElement('div');
+      p.className = 'cartela';
+      p.textContent = c.join(', ');
+      container.appendChild(p);
+    });
+
+    modelDiv.appendChild(container);
+    s.appendChild(modelDiv);
+  });
+
+  showAlert('success', 'Cartelas geradas com sucesso!');
+}
+
+function conferir() {
+  const resultadoText = document.getElementById('resultado').value.trim();
+
+  if (!resultadoText) {
+    showAlert('error', 'Informe as dezenas sorteadas');
+    return;
+  }
+
+  const r = resultadoText.split(',').map(n => +n.trim()).filter(n => !isNaN(n));
+
+  if (r.length !== 15) {
+    showAlert('error', `Informe exatamente 15 dezenas. Você informou ${r.length}.`);
+    return;
+  }
+
+  if (new Set(r).size !== 15) {
+    showAlert('error', 'Há dezenas duplicadas. Verifique a entrada.');
+    return;
+  }
+
+  if (r.some(n => n < 1 || n > 25)) {
+    showAlert('error', 'Todas as dezenas devem estar entre 1 e 25.');
+    return;
+  }
+
+  let stats = {};
+  let totalCartelas = 0;
+
+  document.querySelectorAll('.cartela').forEach(el => {
+    const nums = el.textContent.split(',').map(Number);
+    const ac = nums.filter(n => r.includes(n)).length;
+    totalCartelas++;
+
+    if (ac >= 11) {
+      stats[ac] = (stats[ac] || 0) + 1;
+      el.className = `cartela hit${ac}`;
+      el.innerHTML = nums.join(', ') + ` ➜ <strong>${ac} pts</strong>`;
+    } else {
+      el.className = 'cartela';
+      el.innerHTML = nums.join(', ') + ` ➜ ${ac} pts`;
+    }
+  });
+
+  let txt = `<div class="stats-grid">`;
+  txt += `<div class="stat-card"><div class="stat-label">Total de cartelas</div><div class="stat-value">${totalCartelas}</div></div>`;
+
+  let totalPremios = 0;
+  let totalGanho = 0;
+
+  for (let pts = 15; pts >= 11; pts--) {
+    const qtd = stats[pts] || 0;
+    const premio = PREMIOS[pts] || 0;
+    const ganho = qtd * premio;
+    totalPremios += qtd;
+    totalGanho += ganho;
+
+    if (qtd > 0) {
+      txt += `<div class="stat-card"><div class="stat-label">${pts} pontos</div><div class="stat-value">${qtd}</div></div>`;
+    }
+  }
+
+  txt += `</div>`;
+
+  if (totalPremios > 0) {
+    txt += `<div class="diagnostico"><b>Resultado:</b><br>`;
+    txt += `Total de prêmios: ${totalPremios}<br>`;
+    txt += `Ganho estimado: R$ ${totalGanho.toFixed(2)}<br>`;
+    txt += `</div>`;
+    showAlert('success', 'Conferência concluída!');
+  } else {
+    txt += `<div class="diagnostico"><b>Nenhuma premiação neste concurso.</b></div>`;
+    showAlert('info', 'Nenhuma cartela com 11+ pontos.');
+  }
+
+  document.getElementById('estatisticas').innerHTML = txt;
+}
+
+function simular() {
+  const banca = +document.getElementById('banca').value;
+  const qtd = +document.getElementById('cartelasPorConcurso').value;
+  const custo = +document.getElementById('custo').value;
+  const ciclos = +document.getElementById('ciclos').value;
+
+  if (banca <= 0 || qtd <= 0 || custo <= 0 || ciclos <= 0) {
+    showAlert('error', 'Todos os valores devem ser maiores que zero.');
+    return;
+  }
+
+  const gasto = qtd * custo * ciclos;
+  const retornoMedio = (qtd * 0.28 * PREMIOS[11] + qtd * 0.03 * PREMIOS[12]) * ciclos;
+  const isa = gasto / (retornoMedio || 1);
+
+  let zona = 'Zona estável';
+  let cls = 'ok';
+
+  if (isa > 1.2 && isa <= 1.8) {
+    zona = 'Zona de atenção';
+    cls = 'warn';
+  }
+  if (isa > 1.8) {
+    zona = 'Stress alto — reduzir';
+    cls = 'danger';
+  }
+
+  let html = `<div class="diagnostico">`;
+  html += `<b>Prognóstico simplificado</b><br>`;
+  html += `Exposição total: <strong>R$ ${gasto.toFixed(2)}</strong><br>`;
+  html += `Retorno estrutural estimado: <strong>R$ ${retornoMedio.toFixed(2)}</strong><br>`;
+  html += `ISA (Índice de Stress de Aposta): <strong>${isa.toFixed(2)}</strong><br>`;
+  html += `Status: <span class='${cls}'>${zona}</span><br>`;
+  html += `</div>`;
+
+  document.getElementById('diagnostico').innerHTML = html;
+  showAlert('info', 'Simulação concluída!');
+}
+
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+  document.getElementById(tabName).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function showAlert(type, message) {
+  const alertDiv = document.createElement('div');
+  alertDiv.className = `alert alert-${type} show`;
+  alertDiv.textContent = message;
+
+  const container = document.querySelector('.container');
+  container.insertBefore(alertDiv, container.firstChild);
+
+  setTimeout(() => {
+    alertDiv.classList.remove('show');
+    setTimeout(() => alertDiv.remove(), 300);
+  }, 4000);
+}
+
+function openHelp() {
+  document.getElementById('helpModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeHelp() {
+  document.getElementById('helpModal').classList.remove('active');
+  document.body.style.overflow = 'auto';
+}
+
+document.getElementById('helpModal').addEventListener('click', (e) => {
+  if (e.target.id === 'helpModal') {
+    closeHelp();
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.getElementById('helpModal').classList.contains('active')) {
+    closeHelp();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('Gênio X v4 — Sistema inicializado');
+});
+
+// FUNÇÃO DE RESET DO SISTEMA
+function resetSistema() {
+  if (confirm("Deseja realmente resetar todos os dados e campos do sistema?")) {
+    // 1. Limpa variáveis internas
+    TODAS = {};
+
+    // 2. Limpa campos de entrada (Inputs)
+    document.getElementById('banca').value = 500;
+    document.getElementById('cartelasPorConcurso').value = 30;
+    document.getElementById('custo').value = 3.5;
+    document.getElementById('ciclos').value = 10;
+    document.getElementById('resultado').value = '';
+
+    // 3. Limpa áreas de saída de texto e diagnóstico
+    document.getElementById('diagnostico').innerHTML = '';
+    document.getElementById('saida').innerHTML = '';
+    document.getElementById('estatisticas').innerHTML = '';
+
+    // 4. Remove alertas residuais
+    document.querySelectorAll('.alert').forEach(el => el.remove());
+
+    // 5. Volta para a primeira aba
+    switchTab('capital');
+
+    showAlert('success', 'Sistema resetado com sucesso!');
+    console.log('Gênio X v4 — Sistema Reiniciado');
+  }
+}
+
+
+</script>
+</body>
+</html>
